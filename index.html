@@ -21,7 +21,7 @@
   <script>
     const url = 'https://script.google.com/macros/s/AKfycbzEN0T83Xl2xFCHt6Evo-YCPZRyk1Zk7_PQkD28xeodC4T2sR_vfveQMivgym6mahrX/exec'; // reemplaza con el URL de Apps Script
 
-    fetch(url)
+   fetch(url)
     .then(response => response.json())
     .then(data => {
       const inicio = data.totalAnterior;
@@ -34,14 +34,28 @@
       const incrementoPorSegundo = (fin - inicio) / duracionTotal;
 
       let segundosTranscurridos = (ahora - tInicio) / 1000;
-      let valorInicial = inicio + incrementoPorSegundo * segundosTranscurridos;
+      let valorActual = inicio + incrementoPorSegundo * segundosTranscurridos;
 
-      let actual = valorInicial;
+      // Formato latinoamericano: punto para miles, coma para decimales
+      const formateador = new Intl.NumberFormat('es-CL', {
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3,
+      });
 
-      setInterval(() => {
-        actual += incrementoPorSegundo;
-        document.getElementById('contador').textContent = `${actual.toFixed(3)} m²`;
-      }, 1000);
+      function actualizar() {
+        const ahora = new Date();
+        const segundosDesdeInicio = (ahora - tInicio) / 1000;
+        const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
+
+        // Animación suave: interpolar hacia el nuevo valor
+        valorActual += (nuevoValor - valorActual) * 0.1;
+
+        document.getElementById('contador').textContent = `${formateador.format(valorActual)} m²`;
+
+        requestAnimationFrame(actualizar);
+      }
+
+      actualizar(); // iniciar animación
     });
 </script>
 </body>
