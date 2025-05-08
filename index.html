@@ -40,7 +40,7 @@
 
       setInterval(() => {
         actual += incrementoPorSegundo;
-        document.getElementById('contador').textContent = `${Math.floor(actual)} m²`;
+        document.getElementById('contador').textContent = `${actual.toFixed(3)} m²`;
       }, 1000);
     });
 </script>
