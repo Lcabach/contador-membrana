@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contador m² vendidos</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    #contador {
+      font-size: 4em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="contador">Cargando...</h1>
+
+  <script>
+    const url = 'https://script.google.com/macros/s/AKfycbzEN0T83Xl2xFCHt6Evo-YCPZRyk1Zk7_PQkD28xeodC4T2sR_vfveQMivgym6mahrX/exec'; // reemplaza con el URL de Apps Script
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const inicio = data.totalAnterior;
+        const fin = data.totalActual;
+        const tInicio = new Date(data.fechaInicio);
+        const tFin = new Date(data.fechaFin);
+        const duracion = (tFin - tInicio) / 1000;
+        const incremento = (fin - inicio) / duracion;
+        let actual = inicio;
+
+        setInterval(() => {
+          actual += incremento;
+          document.getElementById('contador').textContent = `${Math.floor(actual)} m²`;
+        }, 1000);
+      });
+  </script>
+</body>
+</html>
