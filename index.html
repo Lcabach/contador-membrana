@@ -1,3 +1,7 @@
+<!-- En el <head> de tu archivo -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,7 +20,7 @@
   </style>
 </head>
 <body>
-  <h1 id="contador">Cargando...</h1>
+  <h1 id="contador" class="odometer">0</h1>
 
   <script>
     const url = 'https://script.google.com/macros/s/AKfycbzEN0T83Xl2xFCHt6Evo-YCPZRyk1Zk7_PQkD28xeodC4T2sR_vfveQMivgym6mahrX/exec'; // reemplaza con el URL de Apps Script
@@ -42,16 +46,29 @@
         maximumFractionDigits: 3,
       });
 
-      function actualizar() {
-        const ahora = new Date();
-        const segundosDesdeInicio = (ahora - tInicio) / 1000;
-        const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
+      function formatearParaOdometer(num) {
+  return num.toFixed(3); // Odometer formatea solo con números, luego tú los transformas visualmente si deseas
+}
 
-        // Animación suave: interpolar hacia el nuevo valor
-        valorActual += (nuevoValor - valorActual) * 0.1;
+function actualizar() {
+  const ahora = new Date();
+  const segundosDesdeInicio = (ahora - tInicio) / 1000;
+  const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
 
-        document.getElementById('contador').textContent = `${formateador.format(valorActual)} m²`;
+  valorActual += (nuevoValor - valorActual) * 0.1;
 
+  document.getElementById('contador').innerText = formatearParaOdometer(valorActual);
+
+  requestAnimationFrame(actualizar);
+}
+
+        function formatearNumero(num) {
+  const partes = num.toFixed(3).split('.');
+  const miles = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `${miles},${partes[1]}`;
+}
+
+document.getElementById('contador').textContent = `${formatearNumero(valorActual)} m²`;
         requestAnimationFrame(actualizar);
       }
 
