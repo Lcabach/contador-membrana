@@ -1,79 +1,80 @@
-<!-- En el <head> de tu archivo -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Contador m² vendidos</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contador de Membrana</title>
+
+  <!-- Odometer CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css" />
+  
   <style>
     body {
       font-family: sans-serif;
-      text-align: center;
-      margin-top: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f4f4f4;
+      margin: 0;
     }
-    #contador {
-      font-size: 4em;
-      font-weight: bold;
+
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+    }
+
+    #unidad {
+      font-size: 1.5rem;
+      margin-top: 0.5rem;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <h1 id="contador" class="odometer">0</h1>
+  <div id="unidad">m² vendidos</div>
+
+  <!-- Odometer JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
 
   <script>
-    const url = 'https://script.google.com/macros/s/AKfycbzEN0T83Xl2xFCHt6Evo-YCPZRyk1Zk7_PQkD28xeodC4T2sR_vfveQMivgym6mahrX/exec'; // reemplaza con el URL de Apps Script
+    const url = 'TU_URL_DEL_WEBAPP'; // ← Reemplaza con tu URL real de Google Apps Script
 
-   fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const inicio = data.totalAnterior;
-      const fin = data.totalActual;
-      const tInicio = new Date(data.fechaInicio);
-      const tFin = new Date(data.fechaFin);
-      const ahora = new Date();
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const inicio = data.totalAnterior;
+        const fin = data.totalActual;
+        const tInicio = new Date(data.fechaInicio);
+        const tFin = new Date(data.fechaFin);
+        const ahora = new Date();
 
-      const duracionTotal = (tFin - tInicio) / 1000; // en segundos
-      const incrementoPorSegundo = (fin - inicio) / duracionTotal;
+        const duracionTotal = (tFin - tInicio) / 1000; // en segundos
+        const incrementoPorSegundo = (fin - inicio) / duracionTotal;
 
-      let segundosTranscurridos = (ahora - tInicio) / 1000;
-      let valorActual = inicio + incrementoPorSegundo * segundosTranscurridos;
+        let segundosTranscurridos = (ahora - tInicio) / 1000;
+        let valorActual = inicio + incrementoPorSegundo * segundosTranscurridos;
 
-      // Formato latinoamericano: punto para miles, coma para decimales
-      const formateador = new Intl.NumberFormat('es-CL', {
-        minimumFractionDigits: 3,
-        maximumFractionDigits: 3,
+        // Odometer espera solo números, pero haremos el formateo visual más adelante si es necesario
+        const odometer = document.getElementById('contador');
+
+        function actualizar() {
+          const ahora = new Date();
+          const segundosDesdeInicio = (ahora - tInicio) / 1000;
+          const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
+
+          // Animación suave
+          valorActual += (nuevoValor - valorActual) * 0.1;
+
+          odometer.innerHTML = valorActual.toFixed(3);
+
+          requestAnimationFrame(actualizar);
+        }
+
+        actualizar();
       });
-
-      function formatearParaOdometer(num) {
-  return num.toFixed(3); // Odometer formatea solo con números, luego tú los transformas visualmente si deseas
-}
-
-function actualizar() {
-  const ahora = new Date();
-  const segundosDesdeInicio = (ahora - tInicio) / 1000;
-  const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
-
-  valorActual += (nuevoValor - valorActual) * 0.1;
-
-  document.getElementById('contador').innerText = formatearParaOdometer(valorActual);
-
-  requestAnimationFrame(actualizar);
-}
-
-        function formatearNumero(num) {
-  const partes = num.toFixed(3).split('.');
-  const miles = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  return `${miles},${partes[1]}`;
-}
-
-document.getElementById('contador').textContent = `${formatearNumero(valorActual)} m²`;
-        requestAnimationFrame(actualizar);
-      }
-
-      actualizar(); // iniciar animación
-    });
-</script>
+  </script>
 </body>
 </html>
