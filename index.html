@@ -33,8 +33,10 @@
   </style>
 </head>
 <body>
-  <h1 id="contador" class="odometer">0</h1>
-  <div id="unidad">m² vendidos</div>
+  <div style="display: flex; align-items: baseline; gap: 0.5rem;">
+  <h1 id="contador" class="odometer" style="margin: 0;">0</h1>
+  <span id="unidad" style="font-size: 2rem; color: #333;">m²</span>
+</div>
 
   <!-- Odometer JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
