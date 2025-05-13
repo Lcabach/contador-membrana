@@ -7,42 +7,63 @@
 
   <!-- Odometer CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css" />
-  
+
   <style>
     body {
       font-family: sans-serif;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      background: transparent;
       margin: 0;
+      background-image: url('https://drive.google.com/uc?export=view&id=1lidrgnI1c6mellee39UmVdbLRUtxkQyU');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .contenedor {
+      background-color: rgba(0, 0, 0, 0.6); /* capa oscura semitransparente */
+      padding: 2rem 3rem;
+      border-radius: 1rem;
+      text-align: center;
     }
 
     h1 {
       font-size: 3rem;
       margin: 0;
+      color: white;
     }
 
     #unidad {
-      font-size: 1.5rem;
+      font-size: 2rem;
       margin-top: 0.5rem;
-      color: #333;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      #unidad {
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div style="display: flex; align-items: baseline; gap: 0.5rem;">
-  <h1 id="contador" class="odometer" style="margin: 0;">0</h1>
-  <span id="unidad" style="font-size: 2rem; color: #333;">m²</span>
-</div>
+  <div class="contenedor">
+    <div style="display: flex; align-items: baseline; gap: 0.5rem; justify-content: center;">
+      <h1 id="contador" class="odometer">0</h1>
+      <span id="unidad">m²</span>
+    </div>
+  </div>
 
   <!-- Odometer JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
 
   <script>
-    const url = 'https://script.google.com/macros/s/AKfycbzEN0T83Xl2xFCHt6Evo-YCPZRyk1Zk7_PQkD28xeodC4T2sR_vfveQMivgym6mahrX/exec'; // ← Reemplaza con tu URL real de Google Apps Script
+    const url = 'https://script.google.com/macros/s/AKfycbzEN0T83Xl2xFCHt6Evo-YCPZRyk1Zk7_PQkD28xeodC4T2sR_vfveQMivgym6mahrX/exec';
 
     fetch(url)
       .then(response => response.json())
@@ -56,26 +77,31 @@
         const duracionTotal = (tFin - tInicio) / 1000; // en segundos
         const incrementoPorSegundo = (fin - inicio) / duracionTotal;
 
-        let segundosTranscurridos = (ahora - tInicio) / 1000;
-        let valorActual = inicio + incrementoPorSegundo * segundosTranscurridos;
+        let valorActual = inicio;
 
-        // Odometer espera solo números, pero haremos el formateo visual más adelante si es necesario
         const odometer = document.getElementById('contador');
 
         function actualizar() {
           const ahora = new Date();
+
+          if (ahora > tFin) {
+            odometer.innerHTML = fin.toFixed(3);
+            return;
+          }
+
           const segundosDesdeInicio = (ahora - tInicio) / 1000;
           const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
 
-          // Animación suave
           valorActual += (nuevoValor - valorActual) * 0.1;
-
           odometer.innerHTML = valorActual.toFixed(3);
 
           requestAnimationFrame(actualizar);
         }
 
         actualizar();
+      })
+      .catch(error => {
+        console.error("Error al obtener datos:", error);
       });
   </script>
 </body>
