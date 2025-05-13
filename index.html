@@ -9,55 +9,74 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css" />
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
+      margin: 0;
+      padding: 0;
       font-family: sans-serif;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      margin: 0;
-      background-image: url('https://i.imgur.com/zGDSWDP.jpeg');
+      background: url('https://i.imgur.com/zGDSWDP.jpeg') no-repeat center center;
       background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .contenedor {
-      /*background-color: rgba(0, 0, 0, 0.6);  /*capa oscura semitransparente */*/
-      padding: 2rem 3rem;
-      border-radius: 1rem;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 3rem;
-      margin: 0;
       color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .linea {
+      font-size: 5vw;
+      margin: 1rem 0;
+      text-shadow: 2px 2px 6px black;
+    }
+
+    .contador-linea {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    #contador {
+      font-size: 10vw;
+      text-shadow: 2px 2px 6px black;
     }
 
     #unidad {
-      font-size: 2rem;
-      margin-top: 0.5rem;
-      color: white;
+      font-size: 6vw;
+      text-shadow: 2px 2px 6px black;
     }
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 2rem;
+    @media (max-width: 480px) {
+      .linea {
+        font-size: 6vw;
+      }
+      #contador {
+        font-size: 12vw;
       }
       #unidad {
-        font-size: 1.2rem;
+        font-size: 7vw;
       }
     }
   </style>
 </head>
 <body>
-  <div class="contenedor">
-    <div style="display: flex; align-items: baseline; gap: 0.5rem; justify-content: center;">
-      <h1 id="contador" class="odometer">0</h1>
-      <span id="unidad">m²</span>
-    </div>
+  <div class="linea">Ya son más de</div>
+
+  <div class="contador-linea">
+    <div id="contador" class="odometer">0</div>
+    <span id="unidad">m²</span>
   </div>
+
+  <div class="linea">de membranas asfálticas suministradas a lo largo de Chile</div>
+
+  <div class="linea">¿Qué esperas para sumarte?</div>
 
   <!-- Odometer JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
@@ -74,34 +93,23 @@
         const tFin = new Date(data.fechaFin);
         const ahora = new Date();
 
-        const duracionTotal = (tFin - tInicio) / 1000; // en segundos
+        const duracionTotal = (tFin - tInicio) / 1000;
         const incrementoPorSegundo = (fin - inicio) / duracionTotal;
 
         let valorActual = inicio;
-
         const odometer = document.getElementById('contador');
 
         function actualizar() {
           const ahora = new Date();
-
-          if (ahora > tFin) {
-            odometer.innerHTML = fin.toFixed(3);
-            return;
-          }
-
           const segundosDesdeInicio = (ahora - tInicio) / 1000;
           const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
-
           valorActual += (nuevoValor - valorActual) * 0.1;
-          odometer.innerHTML = valorActual.toFixed(3);
 
+          odometer.innerHTML = valorActual.toFixed(3);
           requestAnimationFrame(actualizar);
         }
 
         actualizar();
-      })
-      .catch(error => {
-        console.error("Error al obtener datos:", error);
       });
   </script>
 </body>
