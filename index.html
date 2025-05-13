@@ -30,7 +30,7 @@
     }
 
     .linea {
-      font-size: 5vw;
+      font-size: 2rem;
       margin: 1rem 0;
       text-shadow: 2px 2px 6px black;
     }
@@ -44,22 +44,25 @@
     }
 
     #contador {
-      font-size: 10vw;
+      font-size: 4rem;
       text-shadow: 2px 2px 6px black;
     }
 
     #unidad {
-      font-size: 6vw;
+      font-size: 2.5rem;
       text-shadow: 2px 2px 6px black;
     }
 
-    @media (max-width: 480px) {
+    /* ✅ Estilos SOLO para móviles */
+    @media (max-width: 768px) {
       .linea {
         font-size: 6vw;
       }
+
       #contador {
         font-size: 12vw;
       }
+
       #unidad {
         font-size: 7vw;
       }
@@ -74,43 +77,5 @@
     <span id="unidad">m²</span>
   </div>
 
-  <div class="linea">de membranas asfálticas suministradas a lo largo de Chile</div>
+  <div class="
 
-  <div class="linea">¿Qué esperas para sumarte?</div>
-
-  <!-- Odometer JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
-
-  <script>
-    const url = 'https://script.google.com/macros/s/AKfycbzEN0T83Xl2xFCHt6Evo-YCPZRyk1Zk7_PQkD28xeodC4T2sR_vfveQMivgym6mahrX/exec';
-
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const inicio = data.totalAnterior;
-        const fin = data.totalActual;
-        const tInicio = new Date(data.fechaInicio);
-        const tFin = new Date(data.fechaFin);
-        const ahora = new Date();
-
-        const duracionTotal = (tFin - tInicio) / 1000;
-        const incrementoPorSegundo = (fin - inicio) / duracionTotal;
-
-        let valorActual = inicio;
-        const odometer = document.getElementById('contador');
-
-        function actualizar() {
-          const ahora = new Date();
-          const segundosDesdeInicio = (ahora - tInicio) / 1000;
-          const nuevoValor = inicio + incrementoPorSegundo * segundosDesdeInicio;
-          valorActual += (nuevoValor - valorActual) * 0.1;
-
-          odometer.innerHTML = valorActual.toFixed(3);
-          requestAnimationFrame(actualizar);
-        }
-
-        actualizar();
-      });
-  </script>
-</body>
-</html>
