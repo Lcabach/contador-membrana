@@ -29,6 +29,14 @@
       padding: 1rem;
     }
 
+    .logo {
+      width: 200px;
+      max-width: 60vw;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.6));
+      transition: all 0.3s ease;
+    }
+
     .linea {
       font-size: 2rem;
       margin: 1rem 0;
@@ -53,7 +61,6 @@
       text-shadow: 2px 2px 6px black;
     }
 
-    /* ✅ Estilos SOLO para móviles */
     @media (max-width: 768px) {
       .linea {
         font-size: 6vw;
@@ -66,10 +73,18 @@
       #unidad {
         font-size: 7vw;
       }
+
+      .logo {
+        width: 50vw;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- LOGO -->
+  <img class="logo" src="https://i.imgur.com/XoV4TKo.png" alt="Logo" />
+
   <div class="linea">Ya son más de</div>
 
   <div class="contador-linea">
